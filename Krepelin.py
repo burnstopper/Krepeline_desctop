@@ -3,6 +3,8 @@ import time
 import random
 
 answers = []
+answers_user = []
+questions = []
 intervals_between_answers = []
 
 class Answers:
@@ -14,9 +16,12 @@ def game_with_sum():
     game_timestamp = start_time
     first_digit = random.randint(1, 9)
     second_digit = random.randint(1, 9)
+    questions.append(first_digit)
     while(time.perf_counter() - start_time < 600):
         print(str(first_digit) + ' + ' + str(second_digit) + f' осталось веремени {round(600 - time.perf_counter() + start_time)} секунд')
+        questions.append(second_digit)
         result = input()
+        answers_user.append(result)
         if(result == 'q'):
             return
         if(int(result) == (first_digit + second_digit) % 10):
@@ -33,9 +38,12 @@ def game_with_multiply():
     game_timestamp = start_time
     first_digit = random.randint(0, 9)
     second_digit = random.randint(0, 9)
+    questions.append(first_digit)
     while(time.perf_counter() - start_time < 600):
         print(str(first_digit) + ' * ' + str(second_digit) + f' осталось веремени {round(600 - time.perf_counter() + start_time)} секунд')
+        questions.append(second_digit)
         result = input()
+        answers_user.append(result)
         if(result == 'q'):
             return
         if(int(result) == (first_digit * second_digit) % 10):
@@ -55,13 +63,15 @@ print(
 answer = Answers()
 game_type = input("Выберите тип игры сложение или умножение. 1 - для умножения, 2 - для сложения \n")
 answer.game_type = game_type
+answer.user_answer = answers_user
 if (game_type == '2'):
     print("Выбрано сложение")
     game_with_sum()
 elif (game_type == '1'):
     print("Выбрано умножение")
     game_with_multiply()
+answer.question_numbers = questions
 answer.answers = answers
 answer.intervals = intervals_between_answers
-with open("Game_results.json", "w") as text_file:
+with open("./Game_results.json", "w") as text_file:
     text_file.write(answer.toJSON())
